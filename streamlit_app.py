@@ -8,7 +8,9 @@ from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
-
+import warnings
+warnings.filterwarnings("ignore", category=FutureWarning)
+st.set_option('deprecation.showPyplotGlobalUse', False)
 def getClassifier(classifier):
     if classifier == 'SVM':
         c = st.sidebar.slider(label='Choose value of C' , min_value=0.0001, max_value=10.0)
@@ -41,7 +43,6 @@ def return_data(dataset):
     df['Type'] = data.target
     X_train, X_test, y_train, y_test = train_test_split(data.data, data.target, random_state=1, test_size=0.2)
     return X_train, X_test, y_train, y_test,df,data.target_names
-
 
 # Title
 st.title("Classifiers in Action")
@@ -91,4 +92,11 @@ fig2.set_zlabel('pca-three')
 plt.title("3-D PCA Visualization")
 st.pyplot(fig2.get_figure())
 
+# Train Model
+model = getClassifier(classifier)
+model.fit(X_train, y_train)
+test_score = round(model.score(X_test, y_test), 2)
+train_score = round(model.score(X_train, y_train), 2)
 
+st.subheader('Train Score: {}'.format(train_score))
+st.subheader('Test Score: {}'.format(test_score))
